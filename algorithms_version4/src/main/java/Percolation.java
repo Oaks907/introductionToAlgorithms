@@ -1,8 +1,4 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * @Description
  * @Author Administrator
@@ -14,7 +10,7 @@ public class Percolation {
     private final WeightedQuickUnionUF weightedQuickUnionUF;
 
     // record site status. true means open
-    private final Byte[][] status;
+    private final byte[][] status;
 
     private int openCount;
 
@@ -34,9 +30,11 @@ public class Percolation {
         openCount = 0;
         int size = n * n + 1; // 行，列的取值范围都是 1 - n
         weightedQuickUnionUF = new WeightedQuickUnionUF(size);
-        status = new Byte[n + 1][n + 1];
+        status = new byte[n + 1][n + 1];
         for (int i = 0; i <= n; i++) {
-            Arrays.fill(status[i], (byte) 0);
+            for (int j = 0; j <= n; j++) {
+                status[i][j] = 0;
+            }
         }
     }
 
@@ -62,11 +60,14 @@ public class Percolation {
     }
 
     private int getColFromIndex(int index) {
-        return index % n;
+        int i = index % n;
+        return i == 0 ? n : i;
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
+//        System.out.println(row + " " + col);
+
         validate(row);
         validate(col);
 
@@ -115,6 +116,9 @@ public class Percolation {
         int qRootCol = getColFromIndex(qRoot);
 
         if (status[pRootRow][pRootCol] == PERCOLATION || status[qRootRow][qRootCol] == PERCOLATION) {
+            int newRoot = weightedQuickUnionUF.find(nearIndex);
+            qRootRow = getRowFromIndex(newRoot);
+            qRootCol = getColFromIndex(newRoot);
             if (qRoot == 0) {
                 status[0][0] = 2;
             } else {
@@ -150,11 +154,90 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         int root = weightedQuickUnionUF.find(0);
+//        for (int i = 0; i <= n; i++) {
+//            for (int j = 0; j <= n; j++) {
+//                System.out.print(status[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+//        System.out.println("-----");
         if (root == 0) {
             return status[0][0] == PERCOLATION;
         } else {
             return status[getRowFromIndex(root)][getColFromIndex(root)] == PERCOLATION;
         }
+    }
+
+    public static void main(String[] args) {
+//        Percolation percolation = new Percolation(8);
+//        percolation.open(1,3);
+//        System.out.println(percolation.percolates());
+//        percolation.open(2,6);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(3,3);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(4,6);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(3,2);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(5,6);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(2,5);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(7,5);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(4,7);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(3,1);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(7,8);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(2,7);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(2,1);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(4,3);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(7,1);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(6,8);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(1,4);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(2,8);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(5,2);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(5,4);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(7,7);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(4,4);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(1,5);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(2,4);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(7,6);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(3,6);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(3,7);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(5,3);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(8,6);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(6,2);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(7,3);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(4,8);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(6,7);
+//        System.out.println(percolation.percolates());;
+//        percolation.open(5,7);
+//        System.out.println(percolation.percolates());;
     }
 
 }

@@ -12,7 +12,7 @@ public class PercolationStats {
     private double x;
     private double s;
 
-    private final double confidence_95 = 1.96;
+    private static final double confidence_95 = 1.96;
 
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) {
@@ -25,7 +25,7 @@ public class PercolationStats {
                 int row = StdRandom.uniform(1, n + 1);
                 int col = StdRandom.uniform(1, n + 1);
 
-                while(p.isOpen(row, col)) {
+                while (p.isOpen(row, col)) {
                     row = StdRandom.uniform(1, n + 1);
                     col = StdRandom.uniform(1, n + 1);
                 }
