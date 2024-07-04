@@ -8,18 +8,22 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
 
-    private WeightedQuickUnionUF weightedQuickUnionUF;
+    private final WeightedQuickUnionUF weightedQuickUnionUF;
 
     // record site status. true means open
-    private boolean[] status;
+    private final boolean[] status;
 
     private int openCount;
 
-    private int N;
+    private final int n;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        N = n;
+        if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        this.n = n;
         openCount = 0;
         int size = n * n + 1; // 行，列的取值范围都是 1 - n
         weightedQuickUnionUF = new WeightedQuickUnionUF(size);
@@ -27,16 +31,13 @@ public class Percolation {
     }
 
     private void validate(int p) {
-        if (p < 1 || p > N) {
-            throw new IllegalArgumentException("index " + p + " is not between 1 and " + N);
+        if (p < 1 || p > n) {
+            throw new IllegalArgumentException("index " + p + " is not between 1 and " + n);
         }
     }
 
     private boolean isInGrid(int i, int j) {
-        if ((i < 1 || i > N) || (j < 1 || j > N))
-            return false;
-        else
-            return true;
+        return (i >= 1 && i <= n) && (j >= 1 && j <= n);
     }
 
     /**
@@ -47,7 +48,7 @@ public class Percolation {
      * @return
      */
     private int getIndex(int row, int col) {
-        return (row - 1) * N + col;
+        return (row - 1) * n + col;
     }
 
     // opens the site (row, col) if it is not open already
@@ -62,11 +63,11 @@ public class Percolation {
         int index = getIndex(row, col);
         status[index] = true;
 
-        int up = index - N;
+        int up = index - n;
         if (isInGrid(row - 1, col) && status[up]) {
             weightedQuickUnionUF.union(index, up);
         }
-        int bottom = index + N;
+        int bottom = index + n;
         if (isInGrid(row + 1, col) && status[bottom]) {
             weightedQuickUnionUF.union(index, bottom);
         }
@@ -99,8 +100,8 @@ public class Percolation {
         }
 
         int index = getIndex(row, col);
-        for (int i = 1; i <= N; i++) {
-            if (status[i] && weightedQuickUnionUF.connected(index, i)) {
+        for (int i = 1; i <= n; i++) {
+            if (status[i] && (weightedQuickUnionUF.find(index) == weightedQuickUnionUF.find(i))) {
                 return true;
             }
         }
@@ -114,8 +115,8 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        int row = N;
-        for (int col = 1; col <= N; col++) {
+        int row = n;
+        for (int col = 1; col <= n; col++) {
             if (isFull(row, col)) {
                 return true;
             }

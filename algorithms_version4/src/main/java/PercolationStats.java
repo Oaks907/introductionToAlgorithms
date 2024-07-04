@@ -12,6 +12,8 @@ public class PercolationStats {
     private double x;
     private double s;
 
+    private final double confidence_95 = 1.96;
+
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) {
             throw new IllegalArgumentException();
@@ -22,9 +24,12 @@ public class PercolationStats {
             while (!p.percolates()) {
                 int row = StdRandom.uniform(1, n + 1);
                 int col = StdRandom.uniform(1, n + 1);
-                if (!p.isOpen(row, col)) {
-                    p.open(row, col);
+
+                while(p.isOpen(row, col)) {
+                    row = StdRandom.uniform(1, n + 1);
+                    col = StdRandom.uniform(1, n + 1);
                 }
+                p.open(row, col);
             }
             threshold[i] = (double) p.numberOfOpenSites() / n / n;
         }
@@ -41,11 +46,11 @@ public class PercolationStats {
     }
 
     public double confidenceLo() {
-        return x - 1.96 * s / (Math.sqrt(threshold.length));
+        return x - confidence_95 * s / (Math.sqrt(threshold.length));
     }
 
     public double confidenceHi() {
-        return x + 1.96 * s / (Math.sqrt(threshold.length));
+        return x + confidence_95 * s / (Math.sqrt(threshold.length));
     }
 
     public static void main(String[] args) {
@@ -58,6 +63,6 @@ public class PercolationStats {
         double hi = stats.confidenceHi();
         System.out.printf("mean=%f\n", x);
         System.out.printf("stddev=%f\n", s);
-        System.out.printf("95%% confidence interval=[%f %f]\n", low, hi);
+        System.out.printf("95%% confidence interval = [%f, %f]\n", low, hi);
     }
 }
