@@ -18,7 +18,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private int size;
 
-    public class Node<Item> {
+    private class Node<Item> {
 
         public Node(Item item) {
             this.item = item;
@@ -68,7 +68,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // remove and return a random item
     public Item dequeue() {
-        int uniformIndex = StdRandom.uniform(size);
+        int uniformIndex = StdRandom.uniform(0, size);
 //        System.out.println("SIZE:" + size + " index:" + uniformIndex);
         Iterator<Item> iterator = iterator();
         Node<Item> current = first;
@@ -85,7 +85,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // return a random item (but do not remove it)
     public Item sample() {
-        int uniformIndex = StdRandom.uniform(size);
+        int uniformIndex = StdRandom.uniform(0, size);
         Iterator<Item> iterator = iterator();
         while (iterator.hasNext()) {
             Item next = iterator.next();
