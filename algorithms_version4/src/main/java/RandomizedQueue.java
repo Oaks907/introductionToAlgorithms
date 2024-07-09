@@ -8,35 +8,18 @@ import java.util.NoSuchElementException;
 /**
  * @Description
  * @Author Administrator
- * @Date 2024/7/8 23:19
+ * @Date 2024/7/9 10:55
  **/
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private Node<Item> first;
+    private Item[] arr; // 8bit
 
-    private Node<Item> last;
-
-    private int size;
-
-    private class Node<Item> {
-
-
-        public Item item;
-
-        public Node<Item> pre;
-
-        public Node<Item> next;
-
-        public Node(Item item) {
-            this.item = item;
-        }
-    }
+    private Integer size; // 4 bit
 
     // construct an empty randomized queue
     public RandomizedQueue() {
-        first = null;
-        last = null;
         size = 0;
+        arr = (Item[]) new Object[1];
     }
 
     // is the randomized queue empty?
@@ -52,108 +35,74 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // add the item
     public void enqueue(Item item) {
         if (null == item) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("the item is null!");
         }
-        Node<Item> node = new Node<>(item);
-        if (null == last) {
-            first = node;
-            last = node;
-        } else {
-            node.pre = last;
-            last.next = node;
-            last = node;
-        }
+        arr[size++] = item;
 
-        size++;
+        if (size == arr.length) {
+            arr = resize(arr, size * 2);
+        }
     }
+
+    private Item[] resize(Item[] oldArr, int length) {
+        Item[] newArr = (Item[]) new Object[length];
+        for (int i = 0; i < size; i++) {
+            newArr[i] = oldArr[i];
+        }
+        return newArr;
+    }
+
 
     // remove and return a random item
     public Item dequeue() {
         if (isEmpty()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("the RandomizeQueue is empty!");
         }
 
-        if (first ==  last) {
-            Item item = first.item;
-            first = null;
-            last = null;
-            size--;
-            return item;
+        int uniform = StdRandom.uniform(0, size);
+        size--;
+        Item temp = arr[uniform];
+        arr[uniform] = arr[size];
+        arr[size] = null;
+
+        if (size * 4 < arr.length) {
+            arr = resize(arr, arr.length / 2);
         }
-        int uniformIndex = StdRandom.uniform(0, size);
-//        System.out.println("SIZE:" + size + " index:" + uniformIndex);
-        Iterator<Item> iterator = iterator();
-        Node<Item> current = first;
-        while (iterator.hasNext()) {
-            Item next = iterator.next();
-            if (uniformIndex-- == 0) {
-                remove(current);
-                return next;
-            }
-            current = current.next;
-        }
-        return null;
+
+        return temp;
     }
 
     // return a random item (but do not remove it)
     public Item sample() {
         if (isEmpty()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("the RandomizeQueue is empty!");
         }
 
-        int uniformIndex = StdRandom.uniform(0, size);
-        Iterator<Item> iterator = iterator();
-        while (iterator.hasNext()) {
-            Item next = iterator.next();
-            if (uniformIndex-- == 0) {
-                return next;
-            }
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param current
-     * @return 入参节点的下一个节点
-     */
-    private void remove(Node<Item> current) {
-        if (first.equals(current)) {
-            first = first.next;
-            if (null != first) {
-                first.pre = null;
-            }
-        } else if (last.equals(current)) {
-            last = last.pre;
-            if (null != last) {
-                last.next = null;
-            }
-        } else {
-            Node<Item> next = current.next;
-            Node<Item> pre = current.pre;
-            pre.next = next;
-            next.pre = pre;
-        }
-        size--;
-        current.item = null;
-        current.pre = null;
-        current.next = null;
+        int uniform = StdRandom.uniform(0, size);
+        return arr[uniform];
     }
 
     // return an independent iterator over items in random order
     public Iterator<Item> iterator() {
-        return new ListIterator<>(first);
+        return new ListIterator<>();
     }
 
     private class ListIterator<Item> implements Iterator<Item> {
-        private Node<Item> current;
+        private int n; // 记录遍历次数
 
-        public ListIterator(Node<Item> first) {
-            current = first;
+        private Item[] iteratorArr;
+
+
+        public ListIterator() {
+            n = size;
+            iteratorArr = (Item[]) new Object[size];
+            for (int i = 0; i < size; i++) {
+                iteratorArr[i] = (Item) arr[i];
+            }
         }
 
         public boolean hasNext() {
-            return current != null;
+            return n > 0;
         }
 
         public void remove() {
@@ -161,10 +110,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         public Item next() {
-            if (!hasNext()) throw new NoSuchElementException();
-            Item item = current.item;
-            current = current.next;
-            return item;
+            if (n == 0) {
+                throw new NoSuchElementException("there are no more items!");
+            }
+            int uniform = StdRandom.uniform(0, n);
+            n--;
+            Item temp = iteratorArr[uniform];
+            iteratorArr[uniform] = iteratorArr[n];
+            iteratorArr[n] = temp;
+            return temp;
         }
     }
 
@@ -179,8 +133,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         printArr(queue);
 
         for (int i = 0; i < n; i++) {
-            System.out.println(queue.dequeue());
+            System.out.print(queue.dequeue() + " ");
         }
+        System.out.println();
+
         printArr(queue);
 
         while (!queue.isEmpty()) {
@@ -197,6 +153,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             String next = iterator.next();
             System.out.print(" " + next);
         }
+        System.out.println();
     }
-
 }
