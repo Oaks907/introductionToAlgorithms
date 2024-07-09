@@ -105,8 +105,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Iterator<Item> iterator = iterator();
         while (iterator.hasNext()) {
             Item next = iterator.next();
-            uniformIndex--;
-            if (uniformIndex == 0) {
+            if (uniformIndex-- == 0) {
                 return next;
             }
         }
