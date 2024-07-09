@@ -91,7 +91,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
         Item result = first.item;
 
-        if (first.equals(last)) {
+        if (first == last) {
             first = null;
             last = null;
         } else {
@@ -115,7 +115,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
         Item result = last.item;
 
-        if (first.equals(last)) {
+        if (first == last) {
             first = null;
             last = null;
         } else {
