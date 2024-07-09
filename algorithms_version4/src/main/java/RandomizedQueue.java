@@ -20,15 +20,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class Node<Item> {
 
-        public Node(Item item) {
-            this.item = item;
-        }
 
         public Item item;
 
         public Node<Item> pre;
 
         public Node<Item> next;
+
+        public Node(Item item) {
+            this.item = item;
+        }
     }
 
     // construct an empty randomized queue

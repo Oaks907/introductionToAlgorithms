@@ -19,15 +19,15 @@ public class Deque<Item> implements Iterable<Item> {
 
     private class Node<Item> {
 
-        public Node(Item item) {
-            this.item = item;
-        }
-
         public Item item;
 
         public Node<Item> pre;
 
         public Node<Item> next;
+
+        public Node(Item item) {
+            this.item = item;
+        }
     }
 
     // construct an empty deque
@@ -91,11 +91,17 @@ public class Deque<Item> implements Iterable<Item> {
         }
         Item result = first.item;
 
-        first.item = null;
-        first = first.next;
-        if (null != first) {
-            first.pre = null;
+        if (first.equals(last)) {
+            first = null;
+            last = null;
+        } else {
+            first.item = null;
+            first = first.next;
+            if (null != first) {
+                first.pre = null;
+            }
         }
+
         size--;
 
         return result;
@@ -109,10 +115,15 @@ public class Deque<Item> implements Iterable<Item> {
         }
         Item result = last.item;
 
-        last.item = null;
-        last = last.pre;
-        if (null != last) {
-            last.next = null;
+        if (first.equals(last)) {
+            first = null;
+            last = null;
+        } else {
+            last.item = null;
+            last = last.pre;
+            if (null != last) {
+                last.next = null;
+            }
         }
         size--;
         return result;
@@ -130,8 +141,13 @@ public class Deque<Item> implements Iterable<Item> {
             current = first;
         }
 
-        public boolean hasNext()  { return current != null;                     }
-        public void remove()      { throw new UnsupportedOperationException();  }
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
 
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
@@ -161,7 +177,7 @@ public class Deque<Item> implements Iterable<Item> {
         queue.removeLast();
         printArr(queue);
 
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             queue.removeLast();
         }
         StdOut.println("(" + queue.size() + " left on queue)");
