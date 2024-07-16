@@ -1,8 +1,8 @@
-package org.example.c3.practise;
+package org.example.module3.practise;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
-import org.example.c3.ST;
+import org.example.module3.ST;
 
 /**
  * @Description

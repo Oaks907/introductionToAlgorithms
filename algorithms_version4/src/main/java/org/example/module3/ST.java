@@ -1,4 +1,4 @@
-package org.example.c3;
+package org.example.module3;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;

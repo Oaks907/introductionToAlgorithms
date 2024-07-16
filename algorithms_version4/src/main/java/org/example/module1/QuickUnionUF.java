@@ -1,4 +1,4 @@
-package org.example.c1;
+package org.example.module1;
 
 /**
  * @Description
