@@ -16,6 +16,16 @@ public class FastCollinearPoints {
     private LineSegment[] lineSegments;
 
     public FastCollinearPoints(Point[] points) {
+        if (null == points) {
+            throw new IllegalArgumentException("points is null");
+        }
+
+        for (Point point : points) {
+            if (null == point) {
+                throw new IllegalArgumentException("point is null");
+            }
+        }
+
         this.pointArray = points.clone();
         Arrays.sort(this.pointArray);
         checkPoint(pointArray);

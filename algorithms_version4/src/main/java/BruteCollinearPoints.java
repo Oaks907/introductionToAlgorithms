@@ -17,16 +17,25 @@ public class BruteCollinearPoints {
 
     public BruteCollinearPoints(Point[] points) {
 
+        if (null == points) {
+            throw new IllegalArgumentException("points is null");
+        }
+
+        for (Point point : points) {
+            if (null == point) {
+                throw new IllegalArgumentException("point is null");
+            }
+        }
+
+
         this.pointsArray = points.clone();
-        checkPoint(pointsArray);
         Arrays.sort(this.pointsArray);
+        checkPoint(pointsArray);
+
         calculateLineSegment();
     }
 
     private void checkPoint(Point[] points) {
-        if (null == points) {
-            throw new IllegalArgumentException("points is null");
-        }
         for (int i = 0; i < points.length; i++) {
             Point point = points[i];
             if (null == point) {
