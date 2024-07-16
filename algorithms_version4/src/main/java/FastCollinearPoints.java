@@ -54,6 +54,7 @@ public class FastCollinearPoints {
     }
 
     private void calculateLineSegment(Point origin, Point[] clone, ArrayList<LineSegment> list) {
+
         double slop = origin.slopeTo(clone[0]); // clone[0] is origin
 
         int count = 1;
@@ -65,9 +66,12 @@ public class FastCollinearPoints {
             }
             if (slop != nextSlop || i == clone.length - 1) {
                 if (count > 3 && origin.compareTo(clone[left]) < 0) {
-                    list.add(new LineSegment(origin, clone[i - 1]));
+                    if (slop == nextSlop && i == clone.length - 1) {
+                        list.add(new LineSegment(origin, clone[i]));
+                    } else {
+                        list.add(new LineSegment(origin, clone[i - 1]));
+                    }
                 }
-
                 slop = nextSlop;
                 count = 2;
                 left = i;
