@@ -12,17 +12,17 @@ import java.util.Arrays;
  **/
 public class FastCollinearPoints {
 
-    private Point[] points;
+    private Point[] pointArray;
     private LineSegment[] lineSegments;
 
     public FastCollinearPoints(Point[] points) {
-        checkPoint(points);
-        this.points = points.clone();
-        Arrays.sort(points);
+        this.pointArray = points.clone();
+        Arrays.sort(this.pointArray);
+        checkPoint(pointArray);
 
         ArrayList<LineSegment> list = new ArrayList<>();
-        for (Point origin : points) {
-            Point[] clone = this.points.clone();
+        for (Point origin : this.pointArray) {
+            Point[] clone = this.pointArray.clone();
             Arrays.sort(clone, origin.slopeOrder());
             calculateLineSegment(origin, clone, list);
         }
@@ -63,7 +63,7 @@ public class FastCollinearPoints {
             if (slop == nextSlop) {
                 count++;
             }
-            if (slop != nextSlop || i == clone.length - 1){
+            if (slop != nextSlop || i == clone.length - 1) {
                 if (count > 3 && origin.compareTo(clone[left]) < 0) {
                     list.add(new LineSegment(origin, clone[i - 1]));
                 }
@@ -75,7 +75,7 @@ public class FastCollinearPoints {
         }
     }
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
 
 
         // read the n points from a file

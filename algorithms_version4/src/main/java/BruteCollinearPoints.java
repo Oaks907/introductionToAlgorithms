@@ -12,14 +12,14 @@ import java.util.Arrays;
  **/
 public class BruteCollinearPoints {
 
-    private Point[] points;
+    private Point[] pointsArray;
     private LineSegment[] lineSegments;
 
     public BruteCollinearPoints(Point[] points) {
-        checkPoint(points);
 
-        this.points = points.clone();
-        Arrays.sort(this.points);
+        this.pointsArray = points.clone();
+        checkPoint(pointsArray);
+        Arrays.sort(this.pointsArray);
         calculateLineSegment();
     }
 
@@ -49,19 +49,19 @@ public class BruteCollinearPoints {
     private void calculateLineSegment() {
         ArrayList<LineSegment> list = new ArrayList<>();
 
-        int len = points.length;
+        int len = pointsArray.length;
         for (int i = 0; i < len - 3; i++) {
-            Point first = points[i];
+            Point first = pointsArray[i];
             for (int j = i + 1; j < len - 2; j++) {
-                double v = first.slopeTo(points[j]);
+                double v = first.slopeTo(pointsArray[j]);
                 for (int m = j + 1; m < len - 1; m++) {
-                    double fk = first.slopeTo(points[m]);
+                    double fk = first.slopeTo(pointsArray[m]);
                     if (fk != v) {
                         continue;
                     }
                     for (int n = m + 1; n < len; n++) {
-                        if (v == first.slopeTo(points[n])) {
-                            LineSegment lineSegment = new LineSegment(first, points[n]);
+                        if (v == first.slopeTo(pointsArray[n])) {
+                            LineSegment lineSegment = new LineSegment(first, pointsArray[n]);
                             list.add(lineSegment);
                         }
                     }
