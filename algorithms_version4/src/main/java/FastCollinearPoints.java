@@ -2,7 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,23 +16,24 @@ public class FastCollinearPoints {
     private LineSegment[] lineSegments;
 
     public FastCollinearPoints(Point[] points) {
-        if (null == points) {
-            throw new IllegalArgumentException("points is null");
-        }
-        this.points = points;
-        checkPoint();
+        checkPoint(points);
+        this.points = points.clone();
         Arrays.sort(points);
 
-        ArrayList<LineSegment> lineSegments = new ArrayList<>();
+        ArrayList<LineSegment> list = new ArrayList<>();
         for (Point origin : points) {
             Point[] clone = this.points.clone();
             Arrays.sort(clone, origin.slopeOrder());
-            calculateLineSegment(origin, clone, lineSegments);
+            calculateLineSegment(origin, clone, list);
         }
-        this.lineSegments = lineSegments.toArray(new LineSegment[lineSegments.size()]);
+        this.lineSegments = list.toArray(new LineSegment[list.size()]);
     }
 
-    private void checkPoint() {
+    private void checkPoint(Point[] points) {
+        if (null == points) {
+            throw new IllegalArgumentException("points is null");
+        }
+
         for (int i = 0; i < points.length; i++) {
             Point point = points[i];
             if (null == point) {
@@ -53,7 +53,7 @@ public class FastCollinearPoints {
         return lineSegments.clone();
     }
 
-    private void calculateLineSegment(Point origin, Point[] clone, ArrayList<LineSegment> lineSegments) {
+    private void calculateLineSegment(Point origin, Point[] clone, ArrayList<LineSegment> list) {
         double slop = origin.slopeTo(clone[0]); // clone[0] is origin
 
         int count = 1;
@@ -65,7 +65,7 @@ public class FastCollinearPoints {
             }
             if (slop != nextSlop || i == clone.length - 1){
                 if (count > 3 && origin.compareTo(clone[left]) < 0) {
-                    lineSegments.add(new LineSegment(origin, clone[i - 1]));
+                    list.add(new LineSegment(origin, clone[i - 1]));
                 }
 
                 slop = nextSlop;
@@ -75,7 +75,7 @@ public class FastCollinearPoints {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main (String[] args) {
 
 
         // read the n points from a file

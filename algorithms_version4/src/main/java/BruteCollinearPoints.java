@@ -2,7 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,16 +16,17 @@ public class BruteCollinearPoints {
     private LineSegment[] lineSegments;
 
     public BruteCollinearPoints(Point[] points) {
-        if (null == points) {
-            throw new IllegalArgumentException("points is null");
-        }
-        this.points = points;
+        checkPoint(points);
+
+        this.points = points.clone();
         Arrays.sort(this.points);
-        checkPoint();
         calculateLineSegment();
     }
 
-    private void checkPoint() {
+    private void checkPoint(Point[] points) {
+        if (null == points) {
+            throw new IllegalArgumentException("points is null");
+        }
         for (int i = 0; i < points.length; i++) {
             Point point = points[i];
             if (null == point) {
@@ -54,14 +54,14 @@ public class BruteCollinearPoints {
             Point first = points[i];
             for (int j = i + 1; j < len - 2; j++) {
                 double v = first.slopeTo(points[j]);
-                for (int k = j + 1; k < len - 1; k++) {
-                    double fk = first.slopeTo(points[k]);
+                for (int m = j + 1; m < len - 1; m++) {
+                    double fk = first.slopeTo(points[m]);
                     if (fk != v) {
                         continue;
                     }
-                    for (int l = k + 1; l < len; l++) {
-                        if (v == first.slopeTo(points[l])) {
-                            LineSegment lineSegment = new LineSegment(first, points[l]);
+                    for (int n = m + 1; n < len; n++) {
+                        if (v == first.slopeTo(points[n])) {
+                            LineSegment lineSegment = new LineSegment(first, points[n]);
                             list.add(lineSegment);
                         }
                     }
@@ -71,7 +71,7 @@ public class BruteCollinearPoints {
         this.lineSegments = list.toArray(new LineSegment[list.size()]);
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
 
 
         // read the n points from a file
